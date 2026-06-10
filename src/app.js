@@ -3,12 +3,22 @@ const cors = require('cors');
 
 const authRoutes = require('./routes/authRoutes');
 const verificarToken = require('./middlewares/authMiddleware');
+const saberRoutes = require('./routes/saberRoutes');
+const carreraRoutes = require('./routes/carreraRoutes');   
+const asignaturaRoutes = require('./routes/asignaturaRoutes'); 
+const competenciaRoutes = require('./routes/competenciaRoutes');
+const contenidoRoutes = require('./routes/contenidoRoutes');
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
+app.use('/saberes', saberRoutes);
+app.use('/carreras', carreraRoutes);
+app.use('/asignaturas', asignaturaRoutes);
+app.use('/competencias', competenciaRoutes);
+app.use('/contenidos', contenidoRoutes);
 app.use('/auth', authRoutes);
 
 app.get('/', (req, res) => {
