@@ -8,6 +8,9 @@ const carreraRoutes = require('./routes/carreraRoutes');
 const asignaturaRoutes = require('./routes/asignaturaRoutes'); 
 const competenciaRoutes = require('./routes/competenciaRoutes');
 const contenidoRoutes = require('./routes/contenidoRoutes');
+const articulacionRoutes = require('./routes/articulacionRoutes');
+const dashboardRoutes = require('./routes/dashboardRoutes');
+const proyectoRoutes = require('./routes/proyectoRoutes');
 
 const app = express();
 
@@ -19,6 +22,9 @@ app.use('/carreras', carreraRoutes);
 app.use('/asignaturas', asignaturaRoutes);
 app.use('/competencias', competenciaRoutes);
 app.use('/contenidos', contenidoRoutes);
+app.use('/articulaciones', articulacionRoutes);
+app.use('/dashboard', dashboardRoutes);
+app.use('/proyectos', proyectoRoutes);
 app.use('/auth', authRoutes);
 
 app.get('/', (req, res) => {
