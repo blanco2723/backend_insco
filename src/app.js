@@ -11,6 +11,8 @@ const contenidoRoutes = require('./routes/contenidoRoutes');
 const articulacionRoutes = require('./routes/articulacionRoutes');
 const dashboardRoutes = require('./routes/dashboardRoutes');
 const proyectoRoutes = require('./routes/proyectoRoutes');
+const evidenciaRoutes = require('./routes/evidenciaRoutes');
+const storageRoutes = require('./routes/storageRoutes');
 
 const app = express();
 
@@ -25,6 +27,8 @@ app.use('/contenidos', contenidoRoutes);
 app.use('/articulaciones', articulacionRoutes);
 app.use('/dashboard', dashboardRoutes);
 app.use('/proyectos', proyectoRoutes);
+app.use('/evidencias', evidenciaRoutes);
+app.use('/storage', storageRoutes);
 app.use('/auth', authRoutes);
 
 app.get('/', (req, res) => {

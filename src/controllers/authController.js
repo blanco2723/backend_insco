@@ -38,7 +38,7 @@ const login = async (req, res) => {
             return res.status(401).json({ mensaje: "Contraseña incorrecta" })
         }
 
-        const token = jwt.sign({ id: data.id, email: data.email, rol: data.rol }, process.env.JWT_SECRET, { expiresIn: '1h' })
+        const token = jwt.sign({ id: data.id, email: data.email, rol: data.rol }, process.env.JWT_SECRET, { expiresIn: '8h' })
         res.json({ usuario: data.nombre,
             rol: data.rol,
             token })
@@ -48,7 +48,12 @@ const login = async (req, res) => {
     }
 }
 
+const perfil = async (req, res) => {
+    res .json({ usuario: req.usuario })
+}
+
 module.exports = {
     crearUsuario,
-    login
+    login,
+    perfil
 }

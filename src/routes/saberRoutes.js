@@ -1,6 +1,7 @@
 const express=require('express')
 const router=express.Router()
 const verificarToken=require('../middlewares/authMiddleware')
+const verificarRol=require('../middlewares/rolesMiddleware')
 const {
     obtenerSaberes,
     obtenerSaberPorId,
@@ -9,10 +10,10 @@ const {
     eliminarSaber
 }=require('../controllers/saberController')
 
-router.get('/',verificarToken,obtenerSaberes)
-router.get('/:id',verificarToken,obtenerSaberPorId)
-router.post('/',verificarToken,crearSaber)
-router.put('/:id',verificarToken,actualizarSaber)
-router.delete('/:id',verificarToken,eliminarSaber)
+router.get('/',verificarToken,verificarRol(['Administrador','Docente','Estudiante']),obtenerSaberes)
+router.get('/:id',verificarToken,verificarRol(['Administrador','Docente','Estudiante']),obtenerSaberPorId)
+router.post('/',verificarToken,verificarRol(['Administrador','Docente']),crearSaber)
+router.put('/:id',verificarToken,verificarRol(['Administrador','Docente']),actualizarSaber)
+router.delete('/:id',verificarToken,verificarRol(['Administrador']),eliminarSaber)
 
 module.exports=router
