@@ -12,9 +12,9 @@ const obtenerCompetencias = async (req, res) => {
 }
 const crearCompetencia = async (req, res) => {
     try {
-        const {asignatura_id, descripcion} = req.body
+        const {asignatura_id,nombre, descripcion} = req.body
         const {data,error} = await supabase.from('competencias').insert([
-            {asignatura_id, descripcion}
+            {asignatura_id,nombre, descripcion}
         ]).select()
         if(error){
             return res.status(400).json({message:'Error al crear la competencia'})
@@ -33,6 +33,7 @@ const actualizarCompetencia = async (req,res)=>{
 
         const {
             descripcion,
+            nombre,
             asignatura_id
         } = req.body;
 
@@ -40,6 +41,7 @@ const actualizarCompetencia = async (req,res)=>{
         .from('competencias')
         .update({
             descripcion,
+            nombre,
             asignatura_id
         })
         .eq('id',id)
