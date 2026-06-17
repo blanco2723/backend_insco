@@ -12,9 +12,9 @@ const obtenerCompetencias = async (req, res) => {
 }
 const crearCompetencia = async (req, res) => {
     try {
-        const {asignatura_id, nombre, descripcion} = req.body
+        const {asignatura_id,nombre, descripcion} = req.body
         const {data,error} = await supabase.from('competencias').insert([
-            {asignatura_id, descripcion}
+            {asignatura_id,nombre, descripcion}
         ]).select()
         if(error){
             return res.status(400).json({message:'Error al crear la competencia'})
@@ -25,7 +25,77 @@ const crearCompetencia = async (req, res) => {
     }
 }
 
+const actualizarCompetencia = async (req,res)=>{
+
+    try{
+
+        const {id} = req.params;
+
+        const {
+            descripcion,
+            nombre,
+            asignatura_id
+        } = req.body;
+
+        const {data,error} = await supabase
+        .from('competencias')
+        .update({
+            descripcion,
+            nombre,
+            asignatura_id
+        })
+        .eq('id',id)
+        .select();
+
+        if(error){
+
+            return res.status(400).json(error);
+
+        }
+
+        res.json(data);
+
+    }catch(error){
+
+        res.status(500).json(error);
+
+    }
+
+};
+
+const eliminarCompetencia = async (req,res)=>{
+
+    try{
+
+        const {id} = req.params;
+
+        const {error} = await supabase
+        .from('competencias')
+        .delete()
+        .eq('id',id);
+
+        if(error){
+
+            return res.status(400).json(error);
+
+        }
+
+        res.json({
+            mensaje:'Competencia eliminada'
+        });
+
+    }catch(error){
+
+        res.status(500).json(error);
+
+    }
+
+};
+
+
 module.exports = {
     obtenerCompetencias,
-    crearCompetencia
+    crearCompetencia,
+    actualizarCompetencia,
+    eliminarCompetencia
 }   

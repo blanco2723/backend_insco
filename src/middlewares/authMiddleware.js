@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 
 const verificarToken = (req, res, next) => {
+
     const authHeader = req.headers.authorization
     if (!authHeader) {
         return res.status(401).json({ mensaje: "Acceso denegado. Token no proporcionado." });
@@ -9,6 +10,7 @@ const verificarToken = (req, res, next) => {
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         req.usuario = decoded;
+        console.log(decoded)
         next();
     } catch (error) {
         res.status(403).json({ mensaje: "Token inválido." });
