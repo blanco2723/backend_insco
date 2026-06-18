@@ -129,7 +129,72 @@ Devuelve únicamente un JSON válido segun la estructura:
 
 };
 
+const generarArticulacion = async (req,res)=>{
+
+    try{
+
+        const {
+            contenido,
+            saber
+        } = req.body;
+
+        const prompt = `
+Actúa como especialista en educación técnica tecnológica y descolonización curricular.
+
+Contenido Curricular:
+${contenido}
+
+Saber Comunitario:
+${saber}
+
+Genera:
+
+1. Nivel de articulación (Alto, Medio o Bajo)
+2. Observación pedagógica
+3. Evidencia verificable
+4. Propuesta de proyecto integrador
+
+Devuelve únicamente JSON válido.
+
+{
+    "nivel":"",
+    "observacion":"",
+    "evidencia":"",
+    "propuesta_proyecto":""
+}
+`;
+
+        const result =
+        await model.generateContent(prompt);
+
+        const texto =
+        result.response.text();
+
+        const limpio =
+        texto
+        .replace(/```json/g,'')
+        .replace(/```/g,'');
+
+        const respuesta =
+        JSON.parse(limpio);
+
+        res.json(respuesta);
+
+    }catch(error){
+
+        console.log(error);
+
+        res.status(500).json({
+            mensaje:'Error al generar articulación',
+            error:error.message
+        });
+
+    }
+
+};
+
 module.exports = {
     generarCompetencia,
-    generarContenidos
+    generarContenidos,
+    generarArticulacion
 };

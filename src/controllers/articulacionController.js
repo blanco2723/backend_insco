@@ -1,43 +1,177 @@
 const supabase = require('../config/supabase');
 
-const obtenerArticulaciones = async (req, res) => {
-    try {
-        const { data, error } = await supabase
-            .from('articulaciones')
-            .select(`*,contenidos(id,nombre),
-                saberes(id,titulo)`).order('id', { ascending: true })
-        if (error) {
-            console.error('Error al obtener articulaciones:', error);
-            return res.status(400).json({ error: 'Error al obtener articulaciones' });
+const obtenerArticulaciones = async (req,res)=>{
+
+    try{
+
+        const {data,error} = await supabase
+        .from('articulaciones')
+        .select(`
+            *,
+            contenidos(
+                id,
+                nombre
+            ),
+            saberes(
+                id,
+                titulo
+            )
+        `)
+        .order('id');
+
+        if(error){
+
+            return res.status(400).json({
+                message:'Error al obtener articulaciones'
+            });
+
         }
+
         res.json(data);
-    } catch (error) {
-        console.error('Error al obtener articulaciones:', error);
-        res.status(500).json({ error: 'Error al obtener articulaciones' });
+
+    }catch(error){
+
+        res.status(500).json({
+            message:'Error del servidor'
+        });
+
     }
+
 };
 
-const crearArticulacion = async (req, res) => {
-try {
-    const { contenido_id, saber_id, observacion,nivel } = req.body;
-    const { data, error } = await supabase
+const crearArticulacion = async (req,res)=>{
+
+    try{
+
+        const {
+            contenido_id,
+            saber_id,
+            observacion,
+            nivel,
+            evidencia,
+            propuesta_proyecto,
+            creado_por
+        } = req.body;
+
+        const {data,error} = await supabase
         .from('articulaciones')
-        .insert([{ contenido_id, saber_id, observacion,nivel }])
+        .insert([
+            {
+                contenido_id,
+                saber_id,
+                observacion,
+                nivel,
+                evidencia,
+                propuesta_proyecto,
+                creado_por
+            }
+        ])
         .select();
 
-    if (error) {
-        console.error('Error al crear articulación:', error);
-        return res.status(400).json({ error: 'Error al crear articulación' });
+        if(error){
+
+            return res.status(400).json({
+                message:'Error al crear articulación'
+            });
+
+        }
+
+        res.status(201).json(data);
+
+    }catch(error){
+
+        res.status(500).json({
+            message:'Error del servidor'
+        });
+
     }
 
-    res.status(201).json(data[0]);
-} catch (error) {
-    console.error('Error al crear articulación:', error);
-    res.status(500).json({ error: 'Error al crear articulación' });
-}
+};
+
+const actualizarArticulacion = async (req,res)=>{
+
+    try{
+
+        const {id} = req.params;
+
+        const {
+            contenido_id,
+            saber_id,
+            observacion,
+            nivel,
+            evidencia,
+            propuesta_proyecto
+        } = req.body;
+
+        const {data,error} = await supabase
+        .from('articulaciones')
+        .update({
+            contenido_id,
+            saber_id,
+            observacion,
+            nivel,
+            evidencia,
+            propuesta_proyecto
+        })
+        .eq('id',id)
+        .select();
+
+        if(error){
+
+            return res.status(400).json({
+                message:'Error al actualizar'
+            });
+
+        }
+
+        res.json(data);
+
+    }catch(error){
+
+        res.status(500).json({
+            message:'Error del servidor'
+        });
+
+    }
+
+};
+
+const eliminarArticulacion = async (req,res)=>{
+
+    try{
+
+        const {id} = req.params;
+
+        const {error} = await supabase
+        .from('articulaciones')
+        .delete()
+        .eq('id',id);
+
+        if(error){
+
+            return res.status(400).json({
+                message:'Error al eliminar'
+            });
+
+        }
+
+        res.json({
+            message:'Articulación eliminada'
+        });
+
+    }catch(error){
+
+        res.status(500).json({
+            message:'Error del servidor'
+        });
+
+    }
+
 };
 
 module.exports = {
     obtenerArticulaciones,
-    crearArticulacion
-};  
+    crearArticulacion,
+    actualizarArticulacion,
+    eliminarArticulacion
+};
