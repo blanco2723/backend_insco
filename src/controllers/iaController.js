@@ -193,8 +193,164 @@ Devuelve únicamente JSON válido.
 
 };
 
+const generarIdeasSaberes = async (req,res)=>{
+
+    try{
+
+        const {
+            area_productiva,
+            comunidad
+        } = req.body;
+
+        const prompt = `
+Actúa como especialista boliviano en:
+
+- Educación Técnica Tecnológica
+- Descolonización curricular
+- Saberes y conocimientos de pueblos indígena originario campesinos
+- Modelo Educativo Sociocomunitario Productivo
+
+Genera 10 posibles saberes comunitarios que puedan articularse con la carrera de Sistemas Informáticos.
+
+Área Productiva:
+${area_productiva}
+
+Comunidad:
+${comunidad || 'Bolivia'}
+
+Los saberes deben relacionarse con:
+
+- Tecnología
+- Informática
+- Bases de datos
+- Desarrollo web
+- Redes
+- Digitalización
+- Automatización
+- Gestión de información
+
+Pero vinculados al contexto comunitario boliviano.
+
+Devuelve únicamente JSON válido:
+
+[
+    {
+        "titulo":"",
+        "descripcion":""
+    }
+]
+`;
+
+        const result =
+        await model.generateContent(prompt);
+
+        let texto =
+        result.response.text();
+
+        texto = texto
+            .replace(/```json/g,'')
+            .replace(/```/g,'');
+
+        const ideas =
+        JSON.parse(texto);
+
+        res.json(ideas);
+
+    }catch(error){
+
+        console.log(error);
+
+        res.status(500).json({
+            mensaje:'Error al generar ideas de saberes',
+            error:error.message
+        });
+
+    }
+
+};
+
+const generarIdeasProyecto = async (req, res) => {
+
+try {
+
+    const {
+        contenido,
+        saber,
+        observacion,
+        nivel,
+        propuesta
+    } = req.body;
+
+    const prompt = `
+
+
+Actúa como experto en proyectos sociocomunitarios productivos y desarrollo de sistemas informáticos.
+
+Basándote en:
+
+Contenido: ${contenido}
+
+Saber comunitario: ${saber}
+
+Observación: ${observacion}
+
+Nivel de articulación: ${nivel}
+
+Propuesta inicial: ${propuesta}
+
+Genera EXACTAMENTE 5 ideas de proyectos.
+
+Devuelve únicamente un JSON válido con este formato:
+
+[
+{
+"titulo":"...",
+"descripcion":"..."
+}
+]
+
+No agregues explicaciones.
+No uses markdown.
+No uses caracteres antes o después del JSON.
+
+`;
+
+    const result =
+    await model.generateContent(prompt);
+
+    const texto =
+    result.response.text();
+
+    const jsonLimpio =
+    texto
+        .replace(/```json/g, "")
+        .replace(/```/g, "")
+        .trim();
+
+    const ideas =
+    JSON.parse(jsonLimpio);
+
+    res.json(ideas);
+
+} catch (error) {
+
+    console.log(error);
+
+    res.status(500).json({
+        mensaje:
+        "Error al generar ideas de proyecto"
+    });
+
+}
+
+
+};
+
+
 module.exports = {
     generarCompetencia,
     generarContenidos,
-    generarArticulacion
+    generarArticulacion,
+    generarIdeasSaberes,
+    generarIdeasProyecto
 };

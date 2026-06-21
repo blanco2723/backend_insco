@@ -17,6 +17,7 @@ const obtenerArticulaciones = async (req,res)=>{
                 titulo
             )
         `)
+
         .order('id');
 
         if(error){

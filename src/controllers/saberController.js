@@ -32,7 +32,8 @@ const crearSaber = async (req, res) => {
             titulo,
             descripcion,
             area_productiva,
-            comunidad
+            comunidad,
+            create_por
         } = req.body
         const {data,error} = await supabase.from('saberes').insert([
             {

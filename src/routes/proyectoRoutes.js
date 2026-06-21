@@ -1,7 +1,37 @@
 const express = require('express');
+
 const router = express.Router();
+
+const proyectoController = require('../controllers/proyectoController');
+
 const verificarToken = require('../middlewares/authMiddleware');
-const { obtenerProyectos, crearProyecto } = require('../controllers/proyectoController');   
-router.get('/', verificarToken, obtenerProyectos);
-router.post('/', verificarToken, crearProyecto);
+const verificarRol = require('../middlewares/rolesMiddleware');
+
+router.get(
+'/',
+verificarToken,
+proyectoController.obtenerProyectos
+);
+
+router.post(
+'/',
+verificarToken,
+verificarRol('Administrador','Docente'),
+proyectoController.crearProyecto
+);
+
+router.put(
+'/:id',
+verificarToken,
+verificarRol('Administrador','Docente'),
+proyectoController.actualizarProyecto
+);
+
+router.delete(
+'/:id',
+verificarToken,
+verificarRol('Administrador'),
+proyectoController.eliminarProyecto
+);
+
 module.exports = router;
