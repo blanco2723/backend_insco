@@ -12,6 +12,7 @@ router.get(
 verificarToken,
 proyectoController.obtenerProyectos
 );
+router.get('/:id',verificarToken,proyectoController.obtenerProyectoPorId);
 
 router.post(
 '/',

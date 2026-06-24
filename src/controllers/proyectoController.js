@@ -13,7 +13,7 @@ try {
             nivel, 
             propuesta_proyecto, 
             contenidos( id, nombre ), 
-            saberes( id, titulo ) )`)
+            saberes( id, titulo,comunidad,area_productiva ) )`)
         .order('id');
 
     if (error) {
@@ -166,8 +166,51 @@ try {
 
 };
 
+const obtenerProyectoPorId = async (req,res)=>{
+
+    try{
+
+        const { id } = req.params;
+
+        const { data,error } =
+        await supabase
+        .from('proyectos')
+        .select(`
+            *,
+            articulaciones(
+                *,
+                contenidos(nombre),
+                saberes(titulo)
+            )
+        `)
+        .eq('id',id)
+        .single();
+
+        if(error){
+
+            return res.status(400).json({
+                mensaje:'Proyecto no encontrado'
+            });
+
+        }
+
+        res.json(data);
+
+    }catch(error){
+
+        console.log(error);
+
+        res.status(500).json({
+            mensaje:'Error del servidor'
+        });
+
+    }
+
+};
+
 module.exports = {
 obtenerProyectos,
+obtenerProyectoPorId,
 crearProyecto,
 actualizarProyecto,
 eliminarProyecto
